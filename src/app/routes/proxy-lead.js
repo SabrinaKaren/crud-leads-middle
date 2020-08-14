@@ -35,4 +35,12 @@ router.delete('/delete/:leadId', function (req, res) {
     }
 });
 
+router.get('/get-all', function (req, res) {
+    if (!req.headers.authorization) {
+        res.status(401).send();
+    } else {
+        linkerBackend.connectInBackend(endpoint, '/lead/get-all', 'GET', req.headers.authorization, undefined, res);
+    }
+});
+
 module.exports = router;
