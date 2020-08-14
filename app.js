@@ -3,6 +3,7 @@
 // Routes Require
 var proxyAuth = require('./src/app/routes/proxy-auth.js');
 var proxyStatus = require('./src/app/routes/proxy-status.js');
+var proxyLead = require('./src/app/routes/proxy-lead.js');
 
 var app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json())
 // Routes
 app.use('/proxy/auth', proxyAuth);
 app.use('/proxy/status', proxyStatus);
+app.use('/proxy/lead', proxyLead);
 
 app.get("/", (req, res, next) => {
     res.json({"Response": "It's working"});
