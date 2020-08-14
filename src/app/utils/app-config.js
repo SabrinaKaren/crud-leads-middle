@@ -1,5 +1,5 @@
 ﻿var appConfig = {
-    "RESTEndpoint": {
+    "Endpoint": {
         "protocol": "http",
         "host": "localhost",
         "port": 8090,

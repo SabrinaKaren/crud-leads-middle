@@ -1,40 +1,40 @@
 ﻿var config = require("./app-config.js");
 var unirest = require('unirest');
-
 var linker = [];
 
-linker.connectInBackend = function (endpointConfigName, backendPath, method, token, data, res, callbackToGetData) {
+linker.connectInBackend = function (endpoint, pathInBackend, verb, token, data, res, getDataCallingBackend) {
     
-    if (backendPath.substring(0, 1) !== '/')
-        backendPath = '/' + backendPath;
+    if (pathInBackend.substring(0, 1) !== '/')
+        pathInBackend = '/' + pathInBackend;
 
     var options = {
     };
 
-    options.url = config[endpointConfigName].protocol + "://" +
-        config[endpointConfigName].host +
-        (config[endpointConfigName].port ? ":" + config[endpointConfigName].port : "") +
-        config[endpointConfigName].context +
-        backendPath;
+    options.url = config[endpoint].protocol + "://" +
+        config[endpoint].host +
+        (config[endpoint].port ? ":" + config[endpoint].port : "") +
+        config[endpoint].context +
+        pathInBackend;
 
-    options.method = method;
+    options.verb = verb;
     options.headers = { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8' };
 
-    if (token && token !== '')
+    if (token && token !== ''){
         options.headers = { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': token };
+    }
 
     connect(
         options,
         data,
         function (statusCode, response) {
-            if (callbackToGetData) {
+            if (getDataCallingBackend) {
                 if (!statusCode) {
-                    callbackToGetData(500);
+                    getDataCallingBackend(500);
                 }
                 else if (statusCode === 200) {
-                    callbackToGetData(statusCode, response.body);
+                    getDataCallingBackend(statusCode, response.body);
                 } else {
-                    callbackToGetData(statusCode);
+                    getDataCallingBackend(statusCode);
                 }
             } else {
                 if (!statusCode) {
@@ -47,17 +47,19 @@ linker.connectInBackend = function (endpointConfigName, backendPath, method, tok
             }
         },
         function (err) {
-            if (callbackToGetData) {
-                callbackToGetData(500, undefined);
+            if (getDataCallingBackend) {
+                getDataCallingBackend(500, undefined);
             } else {
                 res.status(500).send();
             }
-        });
+        }
+    );
+    
 };
 
 function connect(options, data, onResult, onError) {
     try {
-        switch (options.method) {
+        switch (options.verb) {
             case 'GET':
                 unirest.get(options.url)
                     .headers(options.headers)
