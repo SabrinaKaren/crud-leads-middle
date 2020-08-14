@@ -11,4 +11,12 @@ router.post('/login', function (req, res) {
     }
 });
 
+router.post('/new-user', function (req, res) {
+    if (req.body.userName && req.body.password) {
+        linkerBackend.connectInBackend(endpoint, '/auth/new-user', 'POST', undefined, req.body, res);
+    } else {
+        res.status(400).send();
+    }
+});
+
 module.exports = router;
