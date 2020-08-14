@@ -35,4 +35,12 @@ router.delete('/delete/:statusId', function (req, res) {
     }
 });
 
+router.get('/get-all', function (req, res) {
+    if (!req.headers.authorization) {
+        res.status(401).send();
+    } else {
+        linkerBackend.connectInBackend(restEndpoint, '/status/get-all', 'GET', req.headers.authorization, undefined, res);
+    }
+});
+
 module.exports = router;

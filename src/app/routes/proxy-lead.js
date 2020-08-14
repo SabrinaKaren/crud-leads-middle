@@ -11,4 +11,12 @@ router.get('/get-by-id/:leadId', function (req, res) {
     }
 });
 
+router.post('/save', function (req, res) {
+    if (!req.headers.authorization) {
+        res.status(401).send();
+    } else {
+        linkerBackend.connectInBackend(restEndpoint, '/lead/save', 'POST', req.headers.authorization, req.body, res);
+    }
+});
+
 module.exports = router;
