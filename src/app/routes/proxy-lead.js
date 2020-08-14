@@ -19,4 +19,12 @@ router.post('/save', function (req, res) {
     }
 });
 
+router.get('/get-by-name/:name', function (req, res) {
+    if (!req.headers.authorization) {
+        res.status(401).send();
+    } else {
+        linkerBackend.connectInBackend(restEndpoint, '/lead/get-by-name/' + req.params.name, 'GET', req.headers.authorization, undefined, res);
+    }
+});
+
 module.exports = router;
